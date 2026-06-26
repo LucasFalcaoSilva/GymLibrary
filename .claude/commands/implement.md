@@ -19,6 +19,7 @@ Implement a spec from `specs/` following SDD workflow.
 7. Run `./gradlew assembleDebug` and confirm BUILD SUCCESSFUL
 8. Run `/review [SPEC-ID]` to validate the implementation
 9. If review passes with no 🔴 findings, stage files and report ready to commit
+10. Run `/report [SPEC-ID]` to generate the implementation report in `reports/`
 
 ## Rules
 

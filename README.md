@@ -61,6 +61,11 @@ This project was built following SDD — all specs are documented before code is
 | FEAT-002 | Exercise List | ⏳ Pending |
 | FEAT-003 | Exercise Detail | ⏳ Pending |
 
+## Reports
+
+Implementation reports for each spec are available in [`reports/`](reports/).
+Each report documents files created, BR compliance, review findings per round, and deviations from spec.
+
 ## License
 
 MIT License — feel free to use this project as a reference.
