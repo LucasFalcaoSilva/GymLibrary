@@ -52,13 +52,14 @@ This project was built following SDD — all specs are documented before code is
 
 | ID | Spec | Status |
 |---|---|---|
-| CORE-001 | Network Setup | ✅ |
-| CORE-002 | DI Setup | ✅ |
-| CORE-003 | Navigation Setup | ✅ |
-| CORE-004 | Theme Setup | ✅ |
-| FEAT-001 | Home — Grupos Musculares | ✅ |
-| FEAT-002 | Exercise List | ✅ |
-| FEAT-003 | Exercise Detail | ✅ |
+| CORE-000 | Project Setup | ✅ Done |
+| CORE-001 | Network Setup | ⏳ Next |
+| CORE-002 | DI Setup | ⏳ Pending |
+| CORE-003 | Navigation Setup | ⏳ Pending |
+| CORE-004 | Theme Setup | ⏳ Pending |
+| FEAT-001 | Home — Body Parts | ⏳ Pending |
+| FEAT-002 | Exercise List | ⏳ Pending |
+| FEAT-003 | Exercise Detail | ⏳ Pending |
 
 ## License
 
