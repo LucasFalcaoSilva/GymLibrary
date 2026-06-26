@@ -29,6 +29,13 @@ com.miranda.gymlibrary
 └── presentation/ # Screen, ViewModel, Navigation
 ```
 
+## Environment
+
+- **JDK:** Always use Android Studio's bundled JDK 21 for Gradle commands
+  — the system terminal defaults to Java 8 which is incompatible with AGP 8.5.0
+  — override: `JAVA_HOME = C:\Program Files\Android\Android Studio\jbr`
+- **Gradle:** Always run via `./gradlew`, never system `gradle`
+
 ## Before Any Implementation
 
 1. Read `docs/architecture.md` and `docs/coding-conventions.md`
