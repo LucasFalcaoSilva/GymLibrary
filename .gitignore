@@ -1,0 +1,25 @@
+# Android Studio
+.idea/
+*.iml
+.DS_Store
+
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local config — NEVER version
+local.properties
+
+# Keystore — NEVER version
+*.jks
+*.keystore
+
+# Generated
+.kotlin/
+**/generated/
+
+# Output artifacts
+*.apk
+*.aab
+*.aar
