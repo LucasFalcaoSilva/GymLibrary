@@ -26,7 +26,7 @@ Configure Retrofit + OkHttp to communicate with the ExerciseDB API on RapidAPI.
 
 ## Files to create
 
-- `core/network/NetworkModule.kt` — Koin module with Retrofit + OkHttp
+- `core/di/NetworkModule.kt` — Koin module with Retrofit + OkHttp
 - `core/network/AuthInterceptor.kt` — injects RapidAPI headers
 - `BuildConfig` field `RAPIDAPI_KEY` read from `local.properties`
 
