@@ -33,7 +33,22 @@ Configure Retrofit + OkHttp to communicate with the ExerciseDB API on RapidAPI.
 ## Business Rules
 
 - BR-01: Key must never be hardcoded in source files
-- BR-02: Logging interceptor must not run in release builds
+- BR-02: `HttpLoggingInterceptor` must only be added to the OkHttp client when `BuildConfig.DEBUG` is true — the class is `debugImplementation` only and will cause an "Unresolved reference" compile error in release builds if referenced unconditionally. Use:
+  ```kotlin
+  if (BuildConfig.DEBUG) {
+      addInterceptor(HttpLoggingInterceptor().apply {
+          level = HttpLoggingInterceptor.Level.BODY
+      })
+  }
+  ```
+  Alternatively, place the reference inside `src/debug/` source set.
+- BR-03: On startup, assert that `RAPIDAPI_KEY` is not blank before building the OkHttpClient:
+  ```kotlin
+  check(BuildConfig.RAPIDAPI_KEY.isNotBlank()) {
+      "RAPIDAPI_KEY not set — add it to local.properties"
+  }
+  ```
+  Without this guard, an unconfigured key sends `X-RapidAPI-Key: ` (empty string) on every request, returning 401/403 with no local diagnostic.
 
 ## Out of Scope
 
