@@ -55,8 +55,8 @@ This project was built following SDD — all specs are documented before code is
 | CORE-000 | Project Setup | ✅ Done |
 | CORE-001 | Network Setup | ✅ Done |
 | CORE-002 | DI Setup | ✅ Done |
-| CORE-003 | Navigation Setup | ⏳ Next |
-| CORE-004 | Theme Setup | ⏳ Pending |
+| CORE-003 | Navigation Setup | ✅ Done |
+| CORE-004 | Theme Setup | ⏳ Next |
 | FEAT-001 | Home — Body Parts | ⏳ Pending |
 | FEAT-002 | Exercise List | ⏳ Pending |
 | FEAT-003 | Exercise Detail | ⏳ Pending |
