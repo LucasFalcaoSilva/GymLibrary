@@ -10,17 +10,25 @@ Stage and commit changes following GymLibrary conventions.
 
 ## Steps
 
-1. Run `./gradlew assembleDebug` — abort if build fails
-2. List all modified and new files
-3. Stage all relevant files with `git add`
-4. Commit using the Conventional Commits format:
+1. Check `reports/[SPEC-ID].md` for unresolved 🔴 findings:
+   - Read the latest `## Review Round N` section in the report
+   - If any finding has severity 🔴 and status other than "Fixed" → **abort immediately** with:
+     ```
+     ❌ Commit bloqueado — [N] finding(s) 🔴 pendentes em reports/[SPEC-ID].md.
+     Corrija todos os findings 🔴 antes de rodar /commit [SPEC-ID].
+     ```
+   - If no 🔴 findings pending → proceed to step 2
+2. Run `./gradlew assembleDebug` — abort if build fails
+3. List all modified and new files
+4. Stage all relevant files with `git add`
+5. Commit using the Conventional Commits format:
    - `feat:` for new spec implementation
    - `fix:` for bug fixes
    - `docs:` for spec or documentation updates
    - `chore:` for Gradle or config changes
    - `refactor:` for refactoring without behavior change
    - `test:` for test additions
-5. Use the spec ID in the commit message body
+6. Use the spec ID in the commit message body
 
 ## Commit Message Format
 
@@ -34,6 +42,7 @@ AuthInterceptor, HttpLoggingInterceptor (debug only), and
 
 ## Rules
 
+- Never commit if any 🔴 finding is unresolved in the report
 - Never commit if `assembleDebug` fails
 - Never commit `local.properties`, `.idea/`, or `*.jks`
 - Never use `git add .` without reviewing what is staged first
