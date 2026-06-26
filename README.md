@@ -53,8 +53,8 @@ This project was built following SDD — all specs are documented before code is
 | ID | Spec | Status |
 |---|---|---|
 | CORE-000 | Project Setup | ✅ Done |
-| CORE-001 | Network Setup | ⏳ Next |
-| CORE-002 | DI Setup | ⏳ Pending |
+| CORE-001 | Network Setup | ✅ Done |
+| CORE-002 | DI Setup | ⏳ Next |
 | CORE-003 | Navigation Setup | ⏳ Pending |
 | CORE-004 | Theme Setup | ⏳ Pending |
 | FEAT-001 | Home — Body Parts | ⏳ Pending |
