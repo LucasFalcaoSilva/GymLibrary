@@ -1,6 +1,6 @@
-# /qa — Execute QA Test Plan
+# /qa — Validate QA Test Plan and Register Sign-off
 
-Display the QA test plan for a feature and register the sign-off result in the implementation report.
+Read the completed QA test plan, validate results, and register the sign-off in the implementation report.
 
 ## Usage
 
@@ -8,42 +8,53 @@ Display the QA test plan for a feature and register the sign-off result in the i
 /qa FEAT-001
 ```
 
+## Prerequisites
+
+Before running this command, you must:
+1. Open `docs/qa/qa-[FEAT-ID].md`
+2. Install and run the app on a device or emulator
+3. Execute each TC manually and fill in Pass/Fail in the Sign-off table
+4. Fill in device, Android version, and date fields
+
 ## Steps
 
 1. Read `docs/qa/qa-[FEAT-ID].md`
-2. Display each test case one by one, waiting for confirmation of Pass or Fail on each
-3. After all test cases are executed:
-   - If all Pass → append `## QA Sign-off` section to `reports/[FEAT-ID].md` with status **Approved**
-   - If any Fail → append `## QA Sign-off` section with status **Blocked** and list the failed TCs
-4. Display final QA status clearly:
-   - ✅ QA Approved — ready for `/commit [FEAT-ID]`
-   - ❌ QA Blocked — fix failing TCs before committing
+2. Check that all TCs have a result (Pass or Fail) — if any is blank, abort:
+   ```
+   ❌ QA incompleto — TC-00X sem resultado.
+   Preencha todos os TCs em docs/qa/qa-[FEAT-ID].md antes de continuar.
+   ```
+3. Check if any TC failed:
+    - All Pass → status = ✅ Approved
+    - Any Fail → status = ❌ Blocked
+4. Append `## QA Sign-off` section to `reports/[FEAT-ID].md`
+5. Display final result:
+    - ✅ `QA Approved — pode rodar /commit [FEAT-ID]`
+    - ❌ `QA Blocked — corrija os TCs com falha antes de commitar`
 
 ## QA Sign-off Section (appended to reports/FEAT-ID.md)
 
 ```markdown
 ## QA Sign-off
 
-**Status:** ✅ Approved / ❌ Blocked  
-**Date:** YYYY-MM-DD  
-**Device/Emulator:**  
-**Android version:**  
+**Status:** ✅ Approved / ❌ Blocked
+**Date:** YYYY-MM-DD
+**Device/Emulator:** [from test plan]
+**Android version:** [from test plan]
 
 | TC | Description | Result |
 |----|-------------|--------|
-| TC-001 | Happy Path: Body Part Grid loads | ✅ Pass / ❌ Fail |
-| TC-002 | Navigation: Tap a body part card | ✅ Pass / ❌ Fail |
-| TC-003 | Error State: No network | ✅ Pass / ❌ Fail |
-| TC-004 | Retry: Recover from error | ✅ Pass / ❌ Fail |
-| TC-005 | Visual: Theme and layout | ✅ Pass / ❌ Fail |
+| TC-001 | description | ✅ Pass / ❌ Fail |
 
-**Failed TCs:** [list or "None"]  
-**Notes:** [any observations]
+**Failed TCs:** [list or "None"]
+**Notes:** [any observations from test plan]
 ```
 
 ## Rules
 
 - Never mark QA as Approved if any TC failed
-- Never skip TCs — all must be executed
-- If the QA test plan file does not exist for the feature, abort and notify:
-  `❌ QA test plan not found — create docs/qa/qa-[FEAT-ID].md first`
+- Never skip validation — all TCs must have a result before registering
+- If `docs/qa/qa-[FEAT-ID].md` does not exist → abort:
+  ```
+  ❌ Test plan não encontrado — crie docs/qa/qa-[FEAT-ID].md primeiro.
+  ```
