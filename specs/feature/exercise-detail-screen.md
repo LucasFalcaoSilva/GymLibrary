@@ -66,7 +66,7 @@ suspend fun getExerciseById(@Path("id") id: String): ExerciseDto
 **State:**
 ```kotlin
 data class ExerciseDetailUiState(
-    val uiState: UiState<Exercise> = UiState.Loading
+   val uiState: UiState<Exercise> = UiState.Loading
 )
 ```
 
@@ -76,7 +76,7 @@ data class ExerciseDetailUiState(
 - `MuscleChipRow` — Row com `AssistChip` para `bodyPart`, `equipment`, `difficulty` e `category`
 - `MuscleSection` — músculo primário destacado + lista de secundários
 - `DescriptionSection` — texto da `description`
-- `InstructionList` — `LazyColumn` de passos numerados
+- `InstructionList` — `Column + forEachIndexed` de passos numerados (não `LazyColumn` — evita conflito de nested scroll com o `verticalScroll` externo da tela)
 
 ## Layout Structure
 
