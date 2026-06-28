@@ -15,7 +15,18 @@ deviates from this contract without explicit justification.
 
 ---
 
-## Error Categories and Messages
+## Error Types
+
+There are two distinct categories of errors in GymLibrary. They must **never be mixed**:
+
+### 1. Infrastructure Errors
+
+Errors caused by network, connectivity, or server failures. These are handled
+by `Throwable.toUserMessage()` in `core/util/ErrorMapper.kt`.
+
+**Use `toUserMessage()` for:**
+- Initial screen load failures (full-screen `ErrorState`)
+- Any `Result.failure` that comes from a network call on first load
 
 | Category | Condition | Message (PT-BR) |
 |---|---|---|
@@ -26,6 +37,24 @@ deviates from this contract without explicit justification.
 | Not found | HTTP 404 | "Conteúdo não encontrado." |
 | Client error | HTTP 4xx (outros) | "Não foi possível carregar os dados. Tente novamente." |
 | Unknown | Qualquer outro erro | "Ocorreu um erro inesperado. Tente novamente." |
+
+### 2. Operation Errors
+
+Errors that occur during a specific user action after the screen has already
+loaded (e.g. pagination, pull-to-refresh, form submission). These use
+**fixed strings defined in the feature spec** — not `toUserMessage()`.
+
+**Use fixed strings for:**
+- Pagination load-more failures (Snackbar)
+- Any secondary operation that doesn't replace the screen content
+
+> The cause of the failure (network, timeout, server) is irrelevant to the user
+> in these cases — they already have data on screen and just need to know the
+> specific operation failed.
+
+**Examples:**
+- Pagination error → `"Erro ao carregar mais exercícios. Tente novamente."`
+- Each feature spec defines its own operation error messages explicitly
 
 ---
 
@@ -56,8 +85,7 @@ class GetBodyPartsUseCase(private val repository: ExerciseRepository) {
 
 ### Presentation Layer (ViewModel)
 
-Map `Result<T>` to `UiState` using the error mapping defined below:
-
+**Initial load (infrastructure error):**
 ```kotlin
 viewModelScope.launch {
     _uiState.value = HomeUiState(uiState = UiState.Loading)
@@ -67,17 +95,28 @@ viewModelScope.launch {
         }
         .onFailure { error ->
             _uiState.value = HomeUiState(
-                uiState = UiState.Error(error.toUserMessage())
+                uiState = UiState.Error(error.toUserMessage())  // ← infrastructure
             )
         }
 }
+```
+
+**Secondary operation (operation error):**
+```kotlin
+useCase()
+    .onSuccess { /* append data */ }
+    .onFailure {
+        // Fixed string from spec — not toUserMessage()
+        _snackbarMessage.value = "Erro ao carregar mais exercícios. Tente novamente."
+    }
 ```
 
 ---
 
 ## Error Mapper
 
-Create `core/util/ErrorMapper.kt` with a single extension function used by all ViewModels:
+Create `core/util/ErrorMapper.kt` with a single extension function used by all ViewModels
+**for infrastructure errors only**:
 
 ```kotlin
 package com.miranda.gymlibrary.core.util
@@ -110,26 +149,14 @@ fun Throwable.toUserMessage(): String = when (this) {
 
 ## UI Error State
 
-Every screen must display errors using the same pattern:
+Every screen must display full-screen infrastructure errors using the `ErrorState` composable:
 
 ```kotlin
 is UiState.Error -> {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = state.uiState.message,
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text("Tentar novamente")
-        }
-    }
+    ErrorState(
+        message = state.uiState.message,
+        onRetry = { viewModel.retry() }
+    )
 }
 ```
 
@@ -144,16 +171,19 @@ fun ErrorState(
 )
 ```
 
+Operation errors (pagination, etc.) use `Snackbar` with the fixed string from the spec.
+
 ---
 
 ## Business Rules
 
 - BR-01: HTTP status codes, exception class names, and stack traces must **never** appear in the UI
-- BR-02: Every error state must offer a retry action
+- BR-02: Every full-screen error state must offer a retry action
 - BR-03: All user-facing error messages must be in **Portuguese**
-- BR-04: All ViewModels must use `Throwable.toUserMessage()` from `core/util/ErrorMapper.kt` — no inline error message strings in ViewModels or Screens
-- BR-05: `runCatching` must wrap every API call in `RemoteDataSource` — never use bare `try/catch` that swallows exceptions
-- BR-06: `ErrorState` composable from `core/ui/components/` must be used on every screen — no inline error UI
+- BR-04: `toUserMessage()` must only be used for **infrastructure errors** (initial load failures) — never for operation errors (pagination, secondary actions)
+- BR-05: Operation error messages must be **fixed strings defined in the feature spec** — never derived from `toUserMessage()`
+- BR-06: `runCatching` must wrap every API call in `RemoteDataSource` — never use bare `try/catch` that swallows exceptions
+- BR-07: `ErrorState` composable from `core/ui/components/` must be used for full-screen errors — no inline error UI
 
 ---
 
