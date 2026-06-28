@@ -18,4 +18,7 @@ class ExerciseRepositoryImpl(
     ): Result<List<Exercise>> =
         remoteDataSource.getExercisesByBodyPart(bodyPart, limit, offset)
             .map { dtoList -> dtoList.map { it.toDomain() } }
+
+    override suspend fun getExerciseById(id: String): Result<Exercise> =
+        remoteDataSource.getExerciseById(id)
 }

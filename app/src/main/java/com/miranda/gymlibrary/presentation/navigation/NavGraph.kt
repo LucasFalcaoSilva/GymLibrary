@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.miranda.gymlibrary.presentation.exercisedetail.ExerciseDetailScreen
 import com.miranda.gymlibrary.presentation.exerciselist.ExerciseListScreen
 import com.miranda.gymlibrary.presentation.home.HomeScreen
 
@@ -49,7 +50,10 @@ fun NavGraph() {
             val exerciseId = Uri.decode(
                 backStackEntry.arguments?.getString("exerciseId").orEmpty()
             )
-            val onBack: () -> Unit = { navController.popBackStack() }
+            ExerciseDetailScreen(
+                exerciseId = exerciseId,
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }

@@ -15,4 +15,7 @@ interface ExerciseDbService {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
     ): List<ExerciseDto>
+
+    @GET("exercises/exercise/{id}")
+    suspend fun getExerciseById(@Path("id") id: String): ExerciseDto
 }
