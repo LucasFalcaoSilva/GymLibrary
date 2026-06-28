@@ -9,6 +9,8 @@ An Android exercise library app built as a portfolio project to demonstrate Spec
 - See primary and secondary muscles activated
 - Step-by-step instructions for each exercise
 - Paginated exercise list
+- Human-readable error messages with retry
+- Dark theme with gym-inspired color palette
 
 ## Tech Stack
 
@@ -19,10 +21,11 @@ An Android exercise library app built as a portfolio project to demonstrate Spec
 - **Network:** Retrofit + OkHttp + Kotlinx Serialization
 - **Image Loading:** Coil (with GIF support)
 - **Async:** Coroutines + Flow
+- **Testing:** JUnit 4 + MockK + MockWebServer
 
 ## API
 
-[ExerciseDB via RapidAPI](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb)
+[ExerciseDB v2.2 via RapidAPI](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb)
 
 ## Getting Started
 
@@ -46,9 +49,20 @@ Composable     Model      RemoteDataSource
 
 Full architecture documentation in [`docs/architecture.md`](docs/architecture.md).
 
+## Documentation
+
+| Doc | Description |
+|---|---|
+| [`docs/architecture.md`](docs/architecture.md) | Layer diagram, package structure, navigation flow |
+| [`docs/coding-conventions.md`](docs/coding-conventions.md) | Naming, commits, error handling patterns |
+| [`docs/error-handling.md`](docs/error-handling.md) | Infrastructure vs operation errors, ErrorMapper |
+| [`docs/qa/`](docs/qa/) | QA test plans per feature |
+
 ## Specs
 
 This project was built following SDD — all specs are documented before code is written.
+
+### Core
 
 | ID | Spec | Status |
 |---|---|---|
@@ -57,9 +71,38 @@ This project was built following SDD — all specs are documented before code is
 | CORE-002 | DI Setup | ✅ Done |
 | CORE-003 | Navigation Setup | ✅ Done |
 | CORE-004 | Theme Setup | ✅ Done |
-| FEAT-001 | Home — Body Parts | ⏳ Pending |
-| FEAT-002 | Exercise List | ⏳ Pending |
-| FEAT-003 | Exercise Detail | ⏳ Pending |
+
+### Features
+
+| ID | Spec | Status |
+|---|---|---|
+| FEAT-001 | Home — Body Parts | ✅ Done |
+| FEAT-002 | Exercise List | ✅ Done |
+| FEAT-003 | Exercise Detail | ✅ Done |
+
+### Bug Fixes
+
+| ID | Spec | Status |
+|---|---|---|
+| BUG-001 | Back Stack Corrompido | ⏳ Pending |
+| BUG-002 | GIF Exibindo como Imagem Estática | ⏳ Pending |
+| BUG-003 | Paginação Não Carregando | ⏳ Pending |
+
+### Improvements
+
+| ID | Spec | Status |
+|---|---|---|
+| IMP-001 | Cache Local com Room | ⏳ Pending |
+| IMP-002 | App Icon + Home Title | ⏳ Pending |
+| IMP-003 | Internacionalização (PT-BR + EN) | ⏳ Pending |
+
+### Tests
+
+| ID | Spec | Status |
+|---|---|---|
+| TEST-UNIT-001 | Unit Tests — Home Screen | ⏳ Pending |
+| TEST-UNIT-002 | Unit Tests — Exercise List + Detail | ⏳ Pending |
+| TEST-INTEG-001 | Integration Tests — Repository + MockWebServer | ⏳ Pending |
 
 ## Reports
 
