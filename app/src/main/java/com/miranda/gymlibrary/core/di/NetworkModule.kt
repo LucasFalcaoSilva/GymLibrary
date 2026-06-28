@@ -3,6 +3,7 @@ package com.miranda.gymlibrary.core.di
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.miranda.gymlibrary.BuildConfig
 import com.miranda.gymlibrary.core.network.AuthInterceptor
+import com.miranda.gymlibrary.data.remote.api.ExerciseDbService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -39,4 +40,6 @@ val networkModule = module {
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
+
+    single { get<Retrofit>().create(ExerciseDbService::class.java) }
 }

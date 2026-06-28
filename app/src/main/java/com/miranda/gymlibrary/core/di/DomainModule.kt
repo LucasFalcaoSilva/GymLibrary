@@ -1,7 +1,8 @@
 package com.miranda.gymlibrary.core.di
 
+import com.miranda.gymlibrary.domain.usecase.GetBodyPartsUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
-    // TODO: inject UseCases after domain layer is implemented
+    factory { GetBodyPartsUseCase(get()) }
 }

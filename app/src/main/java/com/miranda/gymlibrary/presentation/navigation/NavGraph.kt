@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.miranda.gymlibrary.presentation.home.HomeScreen
 
 @Composable
 fun NavGraph() {
@@ -17,9 +18,11 @@ fun NavGraph() {
         startDestination = HomeRoute.route
     ) {
         composable(HomeRoute.route) {
-            val onBodyPartSelected: (String) -> Unit = { bodyPart ->
-                navController.navigate(ExerciseListRoute.createRoute(bodyPart))
-            }
+            HomeScreen(
+                onBodyPartSelected = { bodyPart ->
+                    navController.navigate(ExerciseListRoute.createRoute(bodyPart))
+                }
+            )
         }
 
         composable(

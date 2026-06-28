@@ -79,16 +79,16 @@
 
 ## Sign-off
 
-| TC | Result | Notes |
-|----|--------|-------|
-| TC-001 | ⬜ Pass / ⬜ Fail | |
-| TC-002 | ⬜ Pass / ⬜ Fail | |
-| TC-003 | ⬜ Pass / ⬜ Fail | |
-| TC-004 | ⬜ Pass / ⬜ Fail | |
-| TC-005 | ⬜ Pass / ⬜ Fail | |
+| TC | Result  | Notes |
+|----|---------|-------|
+| TC-001 | ✅ Pass  | |
+| TC-002 | ✅ Pass  | |
+| TC-003 | ✅ Pass  | |
+| TC-004 | ✅ Pass  | |
+| TC-005 | ✅ Pass  | |
 
-**QA Status:** ⬜ Approved / ⬜ Blocked  
-**Tested by:**  
-**Date:**  
-**Device/Emulator:**  
-**Android version:**
+**QA Status:** ✅ Approved
+**Tested by:** Lucas  
+**Date:** 2026-06-28  
+**Device/Emulator:** Medium Phone 
+**Android version:** 16
