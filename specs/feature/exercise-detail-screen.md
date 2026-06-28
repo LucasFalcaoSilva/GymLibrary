@@ -21,7 +21,8 @@ O usuário vê o detalhe completo de um exercício: GIF animado em tamanho grand
 4. App exibe tela de detalhe com:
    - GIF animado em largura total (aspect ratio 16:9)
    - Nome do exercício (headline)
-   - Chips: `bodyPart`, `equipment`
+   - Chips: `bodyPart`, `equipment`, `difficulty`, `category`
+   - Descrição do exercício (`description`)
    - Seção "Músculos Ativados": músculo primário + lista de secundários
    - Seção "Instruções": lista numerada passo a passo
 5. Top app bar exibe nome do exercício + botão voltar
@@ -38,7 +39,7 @@ Ver `docs/error-handling.md` para mapeamento de erros e componente `ErrorState`.
 - BR-02: Chips de `bodyPart` e `equipment` devem usar `AssistChip` do Material3
 - BR-03: Músculos secundários exibidos como lista separada por vírgula
 - BR-04: Instruções numeradas começando em 1
-- BR-05: GIF deve ter placeholder enquanto carrega (cor `surface`)
+- BR-05: GIF carregado via Coil `AsyncImage` usando URL construída com `exerciseId` — mesmo padrão definido em FEAT-002 BR-04. Placeholder usa cor `surface` enquanto carrega.
 
 ## Domain
 
@@ -65,15 +66,16 @@ suspend fun getExerciseById(@Path("id") id: String): ExerciseDto
 **State:**
 ```kotlin
 data class ExerciseDetailUiState(
-   val uiState: UiState<Exercise> = UiState.Loading
+    val uiState: UiState<Exercise> = UiState.Loading
 )
 ```
 
 **Screen:** `ExerciseDetailScreen`  
 **Components:**
 - `ExerciseGif` — `AsyncImage` largura total, aspect ratio 1f
-- `MuscleChipRow` — Row com `AssistChip` para bodyPart e equipment
+- `MuscleChipRow` — Row com `AssistChip` para `bodyPart`, `equipment`, `difficulty` e `category`
 - `MuscleSection` — músculo primário destacado + lista de secundários
+- `DescriptionSection` — texto da `description`
 - `InstructionList` — `LazyColumn` de passos numerados
 
 ## Layout Structure
@@ -82,7 +84,9 @@ data class ExerciseDetailUiState(
 Column (scrollable)
   ├── ExerciseGif (full width)
   ├── Text(name, headline)
-  ├── MuscleChipRow (bodyPart, equipment)
+  ├── MuscleChipRow (bodyPart, equipment, difficulty, category)
+  ├── DescriptionSection
+  │     └── Text(description, body)
   ├── Divider
   ├── MuscleSection
   │     ├── Text("Músculos Ativados", title)

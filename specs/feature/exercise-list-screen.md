@@ -33,14 +33,15 @@ Ver `docs/error-handling.md` para mapeamento de erros e componente `ErrorState`.
 Exibe mensagem "Nenhum exercício encontrado para este grupo muscular".
 
 **AF-03 — Erro ao carregar mais itens (paginação):**  
-Exibe snackbar "Erro ao carregar mais exercícios. Tente novamente."
+Exibe Snackbar com a mensagem fixa: `"Erro ao carregar mais exercícios. Tente novamente."`  
+Não usar `toUserMessage()` — este é um erro de operação, não de infraestrutura. Ver `docs/error-handling.md`.
 
 ## Business Rules
 
 - BR-01: Paginação com `limit=20` por página
 - BR-02: Nome do exercício exibido capitalizado
 - BR-03: Top app bar exibe o nome do `bodyPart` capitalizado + botão voltar
-- BR-04: GIF deve ser carregado com Coil (`AsyncImage`) com placeholder
+- BR-04: GIF carregado via Coil `AsyncImage` usando URL construída com `exerciseId` — endpoint `GET /image?exerciseId={id}&resolution=360&rapidapi-key={key}`. O header `X-RapidAPI-Key` deve ser incluído na request via OkHttp interceptor ou ImageRequest customizado.
 
 ## Domain
 
@@ -54,14 +55,19 @@ Exibe snackbar "Erro ao carregar mais exercícios. Tente novamente."
 data class Exercise(
     val id: String,
     val name: String,
-    val gifUrl: String,
-    val target: String,
     val bodyPart: String,
     val equipment: String,
+    val target: String,
     val secondaryMuscles: List<String>,
-    val instructions: List<String>
+    val instructions: List<String>,
+    val description: String,
+    val difficulty: String,
+    val category: String
 )
 ```
+
+> `gifUrl` is not part of the domain model — it is constructed client-side in the UI layer
+> using `AuthInterceptor.gifUrl(exerciseId)` or equivalent helper.
 
 ## Data
 
@@ -71,14 +77,25 @@ data class Exercise(
 data class ExerciseDto(
     val id: String,
     val name: String,
-    val gifUrl: String,
-    val target: String,
     val bodyPart: String,
     val equipment: String,
+    val target: String,
     val secondaryMuscles: List<String>,
-    val instructions: List<String>
+    val instructions: List<String>,
+    val description: String,
+    val difficulty: String,
+    val category: String
 )
 ```
+
+**GIF URL:** Not returned by the exercises endpoint. Construct it client-side using the exercise `id`:
+```kotlin
+fun gifUrl(exerciseId: String, apiKey: String) =
+    "https://exercisedb.p.rapidapi.com/image?exerciseId=$exerciseId&resolution=360&rapidapi-key=$apiKey"
+```
+
+> The `/image` endpoint streams a GIF directly (`Content-Type: image/gif`) — it is not JSON.
+> Load it via Coil `AsyncImage` using the constructed URL with the `X-RapidAPI-Key` header.
 
 **API Service:** Add to existing `ExerciseDbService`:
 ```kotlin
