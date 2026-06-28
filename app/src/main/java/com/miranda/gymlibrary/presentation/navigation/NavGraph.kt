@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.miranda.gymlibrary.presentation.exerciselist.ExerciseListScreen
 import com.miranda.gymlibrary.presentation.home.HomeScreen
 
 @Composable
@@ -32,10 +33,13 @@ fun NavGraph() {
             val bodyPart = Uri.decode(
                 backStackEntry.arguments?.getString("bodyPart").orEmpty()
             )
-            val onExerciseSelected: (String) -> Unit = { exerciseId ->
-                navController.navigate(ExerciseDetailRoute.createRoute(exerciseId))
-            }
-            val onBack: () -> Unit = { navController.popBackStack() }
+            ExerciseListScreen(
+                bodyPart = bodyPart,
+                onExerciseSelected = { exerciseId ->
+                    navController.navigate(ExerciseDetailRoute.createRoute(exerciseId))
+                },
+                onBack = { navController.popBackStack() }
+            )
         }
 
         composable(

@@ -17,5 +17,8 @@ class AuthInterceptor : Interceptor {
     companion object {
         const val BASE_URL = "https://exercisedb.p.rapidapi.com/"
         const val HOST = "exercisedb.p.rapidapi.com"
+
+        fun gifUrl(exerciseId: String) =
+            "${BASE_URL}image?exerciseId=$exerciseId&resolution=360&rapidapi-key=${BuildConfig.RAPIDAPI_KEY}"
     }
 }
