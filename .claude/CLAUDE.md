@@ -1,79 +1,100 @@
-# GymLibrary — Claude Code Instructions
+# Spec: Exibir Grupos Musculares (Home)
 
-## Project Overview
+**ID:** FEAT-001  
+**Feature:** Home  
+**Status:** Approved
 
-Android exercise library app built as a portfolio project.
-Full context in `docs/project-context.md`.
+## Description
 
-- **Package:** `com.miranda.gymlibrary`
-- **Min SDK:** 26 (Android 8.0)
-- **API:** ExerciseDB via RapidAPI (`https://exercisedb.p.rapidapi.com`)
-- **Repo:** https://github.com/LucasFalcaoSilva/GymLibrary
+O usuário abre o app e vê uma grade de grupos musculares. Ao tocar em um grupo, navega para a lista de exercícios filtrada.
 
-## Stack
+## Preconditions
 
-Kotlin · Jetpack Compose · Clean Architecture + MVVM · Koin · Retrofit +
-OkHttp + Kotlinx Serialization · Coil (GIF support) · Coroutines + Flow ·
-JUnit + MockK
+- Rede disponível
+- API key configurada
 
-## Architecture
+## Main Flow
 
-Clean Architecture — 3 layers: `presentation → domain → data`.
-Full diagram in `docs/architecture.md`.
+1. App exibe `LoadingState` enquanto busca a lista de grupos musculares
+2. Sistema chama `GET /exercises/bodyPartList`
+3. API retorna lista de strings (ex: `["back", "chest", "legs", ...]`)
+4. App exibe grade 2 colunas com um card por grupo muscular
+5. Cada card exibe: nome do grupo capitalizado + ícone representativo
+6. Usuário toca em um card → navega para `ExerciseListScreen` com o `bodyPart` selecionado
 
+## Alternative Flows
+
+**AF-01 — Erro de rede:**  
+Sistema exibe mensagem de erro + botão "Tentar novamente" que re-executa o passo 2.  
+Ver `docs/error-handling.md` para mapeamento de erros e componente `ErrorState`.
+
+**AF-02 — Lista vazia:**  
+Não esperado da API, mas se ocorrer exibe mensagem "Nenhum grupo encontrado".
+
+## Business Rules
+
+- BR-01: Nomes de grupos musculares devem ser capitalizados na UI (`"back"` → `"Back"`)
+- BR-02: A ordem exibida deve seguir a ordem retornada pela API
+
+## Domain
+
+**UseCase:** `GetBodyPartsUseCase`  
+**Repository:** `ExerciseRepository.getBodyParts(): Result<List<String>>`
+
+## Data
+
+**DTO:**
+```kotlin
+// Nenhum DTO necessário — endpoint retorna List<String> diretamente
 ```
-com.miranda.gymlibrary
-├── core/         # DI, network, theme, util
-├── data/         # RepositoryImpl, RemoteDataSource, DTO, Mapper
-├── domain/       # UseCase, Model, Repository (interface)
-└── presentation/ # Screen, ViewModel, Navigation
+
+**API Service:**
+```kotlin
+interface ExerciseDbService {
+    @GET("exercises/bodyPartList")
+    suspend fun getBodyPartList(): List<String>
+}
 ```
 
-## Environment
+**DataSource:** `ExerciseRemoteDataSource.getBodyParts(): Result<List<String>>`  
+**Repository:** `ExerciseRepositoryImpl` implementa `ExerciseRepository`
 
-- **JDK:** Always use Android Studio's bundled JDK 21 for Gradle commands
-  — the system terminal defaults to Java 8 which is incompatible with AGP 8.5.0
-  — override: `JAVA_HOME = C:\Program Files\Android\Android Studio\jbr`
-- **Gradle:** Always run via `./gradlew`, never system `gradle`
+## Presentation
 
-## Before Any Implementation
+**ViewModel:** `HomeViewModel`  
+**State:**
+```kotlin
+data class HomeUiState(
+    val uiState: UiState<List<String>> = UiState.Loading
+)
+```
 
-1. Read `docs/architecture.md` and `docs/coding-conventions.md`
-2. Read the target spec in `specs/` before writing any code
-3. Never implement beyond the scope defined in the spec
-4. Never implement logic from a spec that hasn't been read in this session
+**Screen:** `HomeScreen`  
+**Components:**
+- `BodyPartGrid` — LazyVerticalGrid 2 colunas
+- `BodyPartCard` — Card com nome + ícone
 
-## Before Any Commit
+## Icons per BodyPart (suggestion)
 
-1. Run `./gradlew assembleDebug` and confirm BUILD SUCCESSFUL
-2. Use Conventional Commits — see `docs/coding-conventions.md`
-3. One commit per spec implemented
+| BodyPart | Icon |
+|---|---|
+| back | `Icons.Default.FitnessCenter` |
+| chest | `Icons.Default.FavoriteBorder` |
+| upper arms | `Icons.Default.SportsMma` |
+| lower arms | `Icons.Default.PanTool` |
+| shoulders | `Icons.Default.AccessibilityNew` |
+| upper legs | `Icons.AutoMirrored.Filled.DirectionsWalk` |
+| lower legs | `Icons.AutoMirrored.Filled.DirectionsRun` |
+| waist | `Icons.Default.RadioButtonUnchecked` |
+| cardio | `Icons.Default.MonitorHeart` |
+| neck | `Icons.Default.Person` |
 
-## Code Review Rules
+## Files to create
 
-- Review scope is always limited to the spec being implemented
-- Do NOT raise findings that belong to future specs
-- Every finding must reference: file, line, severity, and the spec BR it violates (if any)
-- Severities: 🔴 blocker · 🟡 high · ⚪ low
-- Do NOT auto-fix findings — list them and wait for confirmation
-
-## Key Business Rules (global)
-
-- API key must never be hardcoded — always read from `BuildConfig.RAPIDAPI_KEY`
-- `okhttp-logging` is `debugImplementation` — never `implementation`
-- `HttpLoggingInterceptor` references must be guarded by `BuildConfig.DEBUG`
-- No Android framework imports in `domain/` or `data/` layers
-- Comments must explain WHY, never WHAT — self-explanatory code needs no comment
-
-## Spec Index
-
-| ID       | File                                          | Status |
-|----------|-----------------------------------------------|--------|
-| CORE-000 | specs/core/project-setup.md                  | ✅ Done |
-| CORE-001 | specs/core/network-setup.md                  | ⏳ Next |
-| CORE-002 | specs/core/di-setup.md                       | ⏳ Pending |
-| CORE-003 | specs/core/navigation-setup.md               | ⏳ Pending |
-| CORE-004 | specs/core/theme-setup.md                    | ⏳ Pending |
-| FEAT-001 | specs/features/exercise-list/home-screen.md  | ⏳ Pending |
-| FEAT-002 | specs/features/exercise-list/exercise-list-screen.md | ⏳ Pending |
-| FEAT-003 | specs/features/exercise-detail/exercise-detail-screen.md | ⏳ Pending |
+- `data/remote/api/ExerciseDbService.kt`
+- `data/remote/datasource/ExerciseRemoteDataSource.kt`
+- `data/repository/ExerciseRepositoryImpl.kt`
+- `domain/repository/ExerciseRepository.kt`
+- `domain/usecase/GetBodyPartsUseCase.kt`
+- `presentation/home/HomeViewModel.kt`
+- `presentation/home/HomeScreen.kt`

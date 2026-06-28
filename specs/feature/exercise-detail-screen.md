@@ -29,7 +29,8 @@ O usuário vê o detalhe completo de um exercício: GIF animado em tamanho grand
 ## Alternative Flows
 
 **AF-01 — Erro de rede:**  
-Exibe mensagem de erro + botão "Tentar novamente" que re-executa o passo 2.
+Exibe mensagem de erro + botão "Tentar novamente" que re-executa o passo 2.  
+Ver `docs/error-handling.md` para mapeamento de erros e componente `ErrorState`.
 
 ## Business Rules
 
@@ -44,7 +45,19 @@ Exibe mensagem de erro + botão "Tentar novamente" que re-executa o passo 2.
 **UseCase:** `GetExerciseDetailUseCase`  
 **Input:** `exerciseId: String`  
 **Repository:** `ExerciseRepository.getExerciseById(id): Result<Exercise>`  
-**Model:** reutiliza `Exercise` definido em FEAT-002
+**Model:** reuses `Exercise` defined in FEAT-002 — no new model needed.  
+**Note:** `ExerciseRepository` interface and `ExerciseRepositoryImpl` already exist from FEAT-001 — add the new method only.
+
+## Data
+
+**API Service:** Add to existing `ExerciseDbService`:
+```kotlin
+@GET("exercises/exercise/{id}")
+suspend fun getExerciseById(@Path("id") id: String): ExerciseDto
+```
+
+**DataSource:** Add `getExerciseById(id): Result<Exercise>` to existing `ExerciseRemoteDataSource`  
+**Repository:** Add `getExerciseById()` to existing `ExerciseRepositoryImpl`
 
 ## Presentation
 
@@ -52,7 +65,7 @@ Exibe mensagem de erro + botão "Tentar novamente" que re-executa o passo 2.
 **State:**
 ```kotlin
 data class ExerciseDetailUiState(
-    val uiState: UiState<Exercise> = UiState.Loading
+   val uiState: UiState<Exercise> = UiState.Loading
 )
 ```
 
@@ -86,3 +99,12 @@ Column (scrollable)
 - `domain/usecase/GetExerciseDetailUseCase.kt`
 - `presentation/exercisedetail/ExerciseDetailViewModel.kt`
 - `presentation/exercisedetail/ExerciseDetailScreen.kt`
+
+## Files to modify
+
+- `data/remote/api/ExerciseDbService.kt` — add `getExerciseById()` endpoint
+- `data/remote/datasource/ExerciseRemoteDataSource.kt` — add `getExerciseById()`
+- `data/repository/ExerciseRepositoryImpl.kt` — implement `getExerciseById()`
+- `domain/repository/ExerciseRepository.kt` — add `getExerciseById()` to interface
+- `core/di/DomainModule.kt` — add `GetExerciseDetailUseCase` binding
+- `core/di/PresentationModule.kt` — add `ExerciseDetailViewModel` binding

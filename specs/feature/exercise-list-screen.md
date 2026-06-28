@@ -26,7 +26,8 @@ O usuário vê a lista de exercícios filtrados pelo grupo muscular selecionado 
 ## Alternative Flows
 
 **AF-01 — Erro de rede:**  
-Exibe mensagem de erro + botão "Tentar novamente".
+Exibe mensagem de erro + botão "Tentar novamente".  
+Ver `docs/error-handling.md` para mapeamento de erros e componente `ErrorState`.
 
 **AF-02 — Lista vazia:**  
 Exibe mensagem "Nenhum exercício encontrado para este grupo muscular".
@@ -45,7 +46,8 @@ Exibe snackbar "Erro ao carregar mais exercícios. Tente novamente."
 
 **UseCase:** `GetExercisesUseCase`  
 **Input:** `bodyPart: String, limit: Int, offset: Int`  
-**Repository:** `ExerciseRepository.getExercisesByBodyPart(bodyPart, limit, offset): Result<List<Exercise>>`
+**Repository:** `ExerciseRepository.getExercisesByBodyPart(bodyPart, limit, offset): Result<List<Exercise>>`  
+**Note:** `ExerciseRepository` interface and `ExerciseRepositoryImpl` already exist from FEAT-001 — add the new method only.
 
 **Model:**
 ```kotlin
@@ -60,6 +62,36 @@ data class Exercise(
     val instructions: List<String>
 )
 ```
+
+## Data
+
+**DTO:**
+```kotlin
+@Serializable
+data class ExerciseDto(
+    val id: String,
+    val name: String,
+    val gifUrl: String,
+    val target: String,
+    val bodyPart: String,
+    val equipment: String,
+    val secondaryMuscles: List<String>,
+    val instructions: List<String>
+)
+```
+
+**API Service:** Add to existing `ExerciseDbService`:
+```kotlin
+@GET("exercises/bodyPart/{bodyPart}")
+suspend fun getExercisesByBodyPart(
+    @Path("bodyPart") bodyPart: String,
+    @Query("limit") limit: Int,
+    @Query("offset") offset: Int
+): List<ExerciseDto>
+```
+
+**DataSource:** Add `getExercisesByBodyPart()` to existing `ExerciseRemoteDataSource`  
+**Repository:** Add `getExercisesByBodyPart()` to existing `ExerciseRepositoryImpl`
 
 ## Presentation
 
@@ -80,31 +112,20 @@ data class ExerciseListUiState(
 - `ExerciseCard` — Row com GIF (80dp) + nome + músculo alvo
 - `LoadingMoreIndicator` — CircularProgressIndicator no fim da lista
 
-## DTO
-
-```kotlin
-@Serializable
-data class ExerciseDto(
-    val id: String,
-    val name: String,
-    val gifUrl: String,
-    val target: String,
-    val bodyPart: String,
-    val equipment: String,
-    val secondaryMuscles: List<String>,
-    val instructions: List<String>
-)
-```
-
 ## Files to create
 
 - `data/remote/dto/ExerciseDto.kt`
 - `data/mapper/ExerciseMapper.kt`
 - `domain/model/Exercise.kt`
 - `domain/usecase/GetExercisesUseCase.kt`
-- `domain/repository/ExerciseRepository.kt`
-- `data/remote/api/ExerciseDbService.kt`
-- `data/remote/datasource/ExerciseRemoteDataSource.kt`
-- `data/repository/ExerciseRepositoryImpl.kt`
 - `presentation/exerciselist/ExerciseListViewModel.kt`
 - `presentation/exerciselist/ExerciseListScreen.kt`
+
+## Files to modify
+
+- `data/remote/api/ExerciseDbService.kt` — add `getExercisesByBodyPart()` endpoint
+- `data/remote/datasource/ExerciseRemoteDataSource.kt` — add `getExercisesByBodyPart()`
+- `data/repository/ExerciseRepositoryImpl.kt` — implement `getExercisesByBodyPart()`
+- `domain/repository/ExerciseRepository.kt` — add `getExercisesByBodyPart()` to interface
+- `core/di/DomainModule.kt` — add `GetExercisesUseCase` binding
+- `core/di/PresentationModule.kt` — add `ExerciseListViewModel` binding

@@ -40,6 +40,24 @@ Não esperado da API, mas se ocorrer exibe mensagem "Nenhum grupo encontrado".
 **UseCase:** `GetBodyPartsUseCase`  
 **Repository:** `ExerciseRepository.getBodyParts(): Result<List<String>>`
 
+## Data
+
+**DTO:**
+```kotlin
+// Nenhum DTO necessário — endpoint retorna List<String> diretamente
+```
+
+**API Service:**
+```kotlin
+interface ExerciseDbService {
+    @GET("exercises/bodyPartList")
+    suspend fun getBodyPartList(): List<String>
+}
+```
+
+**DataSource:** `ExerciseRemoteDataSource.getBodyParts(): Result<List<String>>`  
+**Repository:** `ExerciseRepositoryImpl` implementa `ExerciseRepository`
+
 ## Presentation
 
 **ViewModel:** `HomeViewModel`  
@@ -64,14 +82,18 @@ data class HomeUiState(
 | upper arms | `Icons.Default.SportsMma` |
 | lower arms | `Icons.Default.PanTool` |
 | shoulders | `Icons.Default.AccessibilityNew` |
-| upper legs | `Icons.Default.DirectionsWalk` |
-| lower legs | `Icons.Default.DirectionsRun` |
+| upper legs | `Icons.AutoMirrored.Filled.DirectionsWalk` |
+| lower legs | `Icons.AutoMirrored.Filled.DirectionsRun` |
 | waist | `Icons.Default.RadioButtonUnchecked` |
 | cardio | `Icons.Default.MonitorHeart` |
 | neck | `Icons.Default.Person` |
 
 ## Files to create
 
+- `data/remote/api/ExerciseDbService.kt`
+- `data/remote/datasource/ExerciseRemoteDataSource.kt`
+- `data/repository/ExerciseRepositoryImpl.kt`
+- `domain/repository/ExerciseRepository.kt`
 - `domain/usecase/GetBodyPartsUseCase.kt`
 - `presentation/home/HomeViewModel.kt`
 - `presentation/home/HomeScreen.kt`
