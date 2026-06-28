@@ -17,9 +17,11 @@ Implement a spec from `specs/` following SDD workflow.
 5. Identify all files to create or modify per the spec
 6. Implement exactly what the spec defines — no more, no less
 7. Run `./gradlew assembleDebug` and confirm BUILD SUCCESSFUL
-8. Run `/review [SPEC-ID]` to validate the implementation
-9. If review passes with no 🔴 findings, stage files and report ready to commit
-10. Read .claude/commands/report.md and execute its steps to generate the implementation report in reports/[SPEC-ID].md
+8. Read `.claude/commands/review.md` and execute its steps to validate the implementation
+9. If review passes with no 🔴 findings, proceed to step 10
+10. Read `.claude/commands/report.md` and execute its steps to generate the implementation report in `reports/[SPEC-ID].md`
+11. If the spec is a FEAT (not CORE): notify the developer to run `/qa [SPEC-ID]` before committing
+12. Stage files and report ready for `/qa` (FEAT specs) or `/commit` (CORE specs)
 
 ## Rules
 

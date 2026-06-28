@@ -18,17 +18,29 @@ Stage and commit changes following GymLibrary conventions.
      Corrija todos os findings 🔴 antes de rodar /commit [SPEC-ID].
      ```
    - If no 🔴 findings pending → proceed to step 2
-2. Run `./gradlew assembleDebug` — abort if build fails
-3. List all modified and new files
-4. Stage all relevant files with `git add`
-5. Commit using the Conventional Commits format:
+2. Check `reports/[SPEC-ID].md` for QA sign-off (feature specs only):
+   - If the report contains `## QA Sign-off` with status **Blocked** → **abort** with:
+     ```
+     ❌ Commit bloqueado — QA reprovado em reports/[SPEC-ID].md.
+     Corrija os TCs com falha e rode /qa [SPEC-ID] novamente.
+     ```
+   - If the report does not contain `## QA Sign-off` and the spec is a FEAT → **abort** with:
+     ```
+     ❌ Commit bloqueado — QA não executado.
+     Rode /qa [SPEC-ID] antes de commitar.
+     ```
+   - If QA Approved or spec is CORE → proceed to step 3
+3. Run `./gradlew assembleDebug` — abort if build fails
+4. List all modified and new files
+5. Stage all relevant files with `git add`
+6. Commit using the Conventional Commits format:
    - `feat:` for new spec implementation
    - `fix:` for bug fixes
    - `docs:` for spec or documentation updates
    - `chore:` for Gradle or config changes
    - `refactor:` for refactoring without behavior change
    - `test:` for test additions
-6. Use the spec ID in the commit message body
+7. Use the spec ID in the commit message body
 
 ## Commit Message Format
 
